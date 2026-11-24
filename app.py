@@ -53,16 +53,18 @@ button[kind="primary"],a[kind="primary"] {background:#e3c48b!important;color:#78
 .progress-track {margin-bottom:24px;width:100%;height:8px;background:#53141D;border-radius:20px;overflow:hidden;}
 .progress-fill {height:100%;background:#E4C17A;border-radius:20px;transition:width .3s ease;}
 .feedback {color:#E4C17A;font-size:.85rem;font-style:italic;margin:8px 0 16px;background:transparent;border:0;padding:0;}
-.feedback:not(.failure):not(.hint) {
-    margin-top: 18px !important;
-    margin-bottom: 2px !important;
-}
+.feedback:not(.failure):not(.hint) {margin-top:18px!important;margin-bottom:2px!important;}
+.feedback.failure {color:#ffc1c1;}
 .feedback.hint {color:#E4C17A;}
 .final-heading,.final-heading h2,.final-heading h3,.final-heading p,.final-note {text-align:center!important;}
 .final-heading h2 {color:#E4C17A;}
 .final-heading p.rebus {font-size:.85rem;color:#E4C17A;}
 .final-note {color:#fff4df;margin:28px 0 12px!important;}
-.final-note.closing {font-style:italic;}
+.final-notes {text-align:center;margin:28px 0 16px;color:#fff4df;}
+.final-notes p {text-align:center!important;font-family:"DM Sans",sans-serif;font-size:1rem;font-style:normal;font-weight:400;color:#fff4df;margin:0 0 8px!important;}
+.final-notes p:last-child {margin-bottom:0!important;}
+[data-testid="stLinkButton"] a,[data-testid="stLinkButton"] a p {font-size:18px!important;font-weight:700!important;}
+[data-testid="stLinkButton"] a {padding:12px 20px!important;}
 .gift {text-align:center;border:1px solid #a88d55;border-radius:20px;background:#641321;padding:24px 15px;}.gift svg{width:230px;max-width:100%;}.gift .gift-title{display:block;width:100%;padding:0!important;margin:18px auto 6px!important;text-align:center!important;color:#fff1d6;font:700 clamp(1.5rem,5vw,2rem)/1.25 Playfair Display,Georgia,serif;box-sizing:border-box;}.gift p{text-align:center!important;}.gift p{color:#d8c9aa;}
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}.sleigh{transform:translate(225px,0)}}
 @media(max-width:500px){.block-container{padding:1rem .85rem 2rem}.letter{padding:20px}.tile{padding:8px 0;min-height:80px}.tile b{font-size:.7rem}}
@@ -107,7 +109,8 @@ for i, col in enumerate(st.columns(4)):
         st.markdown(f'<div class="tile {style}"><span>{CLUES[i][2] if solved else "🔒"}</span><b>{CLUES[i][1].upper() if solved else "???"}</b><small>{status}</small></div>', unsafe_allow_html=True)
 if s.step:
     st.markdown(f'<p class="feedback">✓ {escape(CLUES[s.step-1][4])}</p>', unsafe_allow_html=True)
-st.divider()
+if not s.step or s.step == 4:
+    st.divider()
 if s.step < 4:
     question, correct, emoji, hint, feedback = CLUES[s.step]
     st.caption(f'CHALLENGE {s.step+1} OF 4')
@@ -139,9 +142,8 @@ else:
     cover = ASSETS / "cover.jpg"
     image_url = "data:image/jpeg;base64," + base64.b64encode(cover.read_bytes()).decode() if cover.is_file() else COVER_URL
     st.markdown(f'''<div class="gift"><div class="cover-frame"><img src="{image_url}" alt="Pomme — Les failles cachées, original album cover" /></div><div class="gift-title" role="heading" aria-level="2">A vinyl by Pomme</div><p>Les failles cachées</p></div>''', unsafe_allow_html=True)
-    st.markdown('<p class="final-note">I hope you enjoyed this entirely avoidable experience.</p>', unsafe_allow_html=True)
+    st.markdown("""<div class="final-notes"><p>I hope you enjoyed this entirely avoidable experience.</p><p>You've wasted your time. Now it's time to waste your money. Merry Christmas!</p></div>""", unsafe_allow_html=True)
     st.link_button('🛒 Proceed to financial damage', PURCHASE_URL, use_container_width=True, type='primary')
-    st.markdown("<p class='final-note closing'>You've wasted your time. Now it's time to waste your money. Merry Christmas! 😚</p>", unsafe_allow_html=True)
 st.divider()
 if st.button('↺ Restart mission'):
     for key in list(s.keys()):
